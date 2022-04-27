@@ -1,42 +1,44 @@
 from collections import deque
+import sys
+
+input = sys.stdin.readline
+
 dx = [-1,1,0,0]
 dy = [0,0,-1,1]
 
-def bfs(x,y):
-  queue = deque()
-  queue.append((x,y))
+queue = deque()
 
+def bfs(x,y):
+  queue.append((x,y))
+  graph[x][y] = 0
+  
   while(queue):
     x,y = queue.popleft()
-
     for i in range(4):
       nx = x + dx[i]
       ny = y + dy[i]
-
-      if nx<0 or ny<0 or nx>=n or ny >=m:
-        continue
-      if graph[nx][ny] == 0:
-        continue
-      if graph[nx][ny] == 1:
-        graph[nx][ny] = graph[x][y]+1
-        queue.append((nx,ny))
-
-  return graph[n-1][m-1]
+      if(0<=nx<n and 0<=ny<m):
+        if(graph[nx][ny] == 1):
+          graph[nx][ny] = 0
+          queue.append((nx,ny))
 
 t = int(input())
 
 for _ in range(t):
-  n,m,p = map(int,input().split())
+  # m = 가로길이, n = 세로길이
+  m,n,k = map(int,input().strip().split())
+
   graph = [[0]*m for _ in range(n)]
-
-  for _ in range(p):
-    ax,ay = map(int,input().split())
-    graph[ax][ay] = 1
-  result =0
-
+  result = 0
+  
+  for i in range(k):
+    y,x = map(int,input().strip().split())
+    graph[x][y] = 1
+  
   for i in range(n):
     for j in range(m):
-      if graph[i][j]==1:
+      if(graph[i][j] == 1):
         bfs(i,j)
-        result+=1
+        result += 1
+  
   print(result)
