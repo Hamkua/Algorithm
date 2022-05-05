@@ -11,15 +11,9 @@ def get_cnt(x,y,n):
   for i in range(x,x+n):
     for j in range(y,y+n):
       if(tmp != graph[i][j]):
-        get_cnt(x,y,div_index)
-        get_cnt(x+div_index, y, div_index)
-        get_cnt(x+2*div_index, y, div_index)
-        get_cnt(x, y+div_index, div_index)
-        get_cnt(x, y+2*div_index, div_index)
-        get_cnt(x+div_index, y+div_index, div_index)
-        get_cnt(x+div_index, y+2*div_index, div_index)
-        get_cnt(x+2*div_index, y+div_index, div_index)
-        get_cnt(x+2*div_index, y+2*div_index,div_index)
+        for a in range(3):
+          for b in range(3):
+            get_cnt(x + a*div_index, y+ b*div_index, div_index)
         return
 
   if(tmp == -1):
