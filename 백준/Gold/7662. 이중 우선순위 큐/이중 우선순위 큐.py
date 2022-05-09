@@ -1,58 +1,95 @@
 import heapq
 import sys
-
 input = sys.stdin.readline
 
 t = int(input())
 
 for _ in range(t):
-  min_value = 2147483647
-  max_value = -2147483648
-  done = set()
-  minh = []
-  maxh = []
+
+  minq = []
+  maxq = []
+  done = dict()
+  
   n = int(input())
   for i in range(n):
     a,b = input().strip().split()
     b = int(b)
     if(a == "I"):
-      heapq.heappush(minh, (b, i))
-      heapq.heappush(maxh, (-1*b, i))
+      if b in done:
+        done[b] += 1
 
-    else:
-      if(b == -1):
-        while(minh):
-          tmp, tmp_index = heapq.heappop(minh)
-          if(tmp_index in done):
-            continue
-          else:
-            done.add(tmp_index)
-            break
-            
-      elif(b == 1):
-        while(maxh):
-          tmp, tmp_index = heapq.heappop(maxh)
-          if(tmp_index in done):
-            continue
-          else:
-            done.add(tmp_index)
-            break
+      else:
+        done[b] = 1
+        if b >= 0:
+          heapq.heappush(maxq, -1 * b)
+        else:
+          heapq.heappush(minq, b)
+
+
+    elif(a == "D"):
+      if not maxq and not minq:
+        continue
+        
+      if( b == -1):
+        if minq:
+          minq.sort()
+          minv = minq[0]
+          if done[minv] > 1:
+            done[minv] -= 1
   
-  while(maxh):
-    tmp, tmp_index = heapq.heappop(maxh)
-    if(tmp_index in done):
-      continue
-    else:
-      max_value = max(-tmp, max_value)
+          else:
+            done.pop(minv)
+            heapq.heappop(minq)
+        elif maxq:
+          maxq.sort()
+          minv = -1 * maxq[-1]
+          if done[minv] > 1:
+            done[minv] -= 1
+  
+          else:
+            done.pop(minv)
+            maxq.pop()
+        else:
+          continue
+          
+      elif( b == 1):
+        if maxq:
+          maxq.sort()
+          maxv = -maxq[0]
+          if done[maxv] > 1:
+            done[maxv] -= 1
+  
+          else:
+            done.pop(maxv)
+            heapq.heappop(maxq)
+
+        elif minq:
+          minq.sort()
+          maxv = minq[-1]
+          if done[maxv] > 1:
+            done[maxv] -= 1
+  
+          else:
+            done.pop(maxv)
+            minq.pop()
+
+        else:
+          continue
+
  
-  while(minh):
-    tmp, tmp_index = heapq.heappop(minh)
-    if(tmp_index in done):
-      continue
-    else:
-      min_value = min(tmp, min_value)
     
-  if(max_value == -2147483648 and min_value == 2147483647):
-    print("EMPTY")
+  if maxq and minq:
+    minq.sort()
+    maxq.sort()
+    print(-maxq[0], minq[0])
+
+  elif maxq:
+    maxq.sort()
+    print(-maxq[0], -maxq[-1])
+
+  elif minq:
+    minq.sort()
+    print(minq[-1], minq[0])
+
   else:
-    print("{} {}".format(max_value, min_value))
+    print("EMPTY")
