@@ -1,40 +1,47 @@
-from collections import deque
 import sys
+from collections import deque
+
 input = sys.stdin.readline
 
-def bfs(start):
-  visited = [False]*(n+1)
-  visited[start] = True
-  count = 0
-  queue = deque()
-  queue.append(start)
-
-  while queue:
-    q = queue.popleft()
-    count += 1
-    for d in data[q]:
-      if visited[d] == False:
-        visited[d] = True
-        queue.append(d)
-  return count
-
-n, m = map(int,input().split())
-data = [[] for _ in range(n+1)]
-for _ in range(m):
-  a, b = map(int,input().split())
-  data[b].append(a)
-max_cnt = 0
+n,m = map(int,input().strip().split())
+graph = [[] for _ in range(n+1)]
 result = []
+max_cnt = -1
+
+def bfs(x):
+  global max_cnt
+  cnt = 0
+  visited = [False]*(n+1)
+  visited[x] = True
+  queue = deque()
+  queue.append(x)
+
+  while(queue):
+    x = queue.popleft()
+    cnt+=1
+    for i in graph[x]:
+      if visited[i] == False:
+        visited[i] = True
+        queue.append(i)
+        # cnt += 1
+
+  return cnt
+
+for _ in range(m):
+  a,b= map(int,input().strip().split())
+  if(a not in graph[b]):
+    graph[b].append(a)
 
 for i in range(1,n+1):
-  if data[i]:
-    temp = bfs(i)
-    if max_cnt <= temp:
-      if max_cnt < temp:
+  if graph[i]:
+    tmp = bfs(i)
+    if tmp>=max_cnt:
+      if(tmp>max_cnt):
         result = []
-      max_cnt = temp
+      max_cnt = tmp
       result.append(i)
 
 for i in result:
-  if i:
-    print(i,end=" ")
+  if(i):
+    print(i, end=" ")
+
