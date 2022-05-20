@@ -1,0 +1,27 @@
+def solution(record):
+    answer = []
+    
+    dic = {}
+    
+    for r in record:
+        message = list(r.split())
+        if len(message) > 2:
+            dic[message[1]] = message[2]
+        
+    for r in record:
+        message = list(r.split())
+        
+        if message[0] == "Enter":
+            answer.append(dic[message[1]] + "님이 들어왔습니다.")
+            
+        elif message[0] == "Leave":
+            answer.append(dic[message[1]] + "님이 나갔습니다.")
+            
+        else:
+            continue
+            
+            
+    
+                
+    
+    return answer
