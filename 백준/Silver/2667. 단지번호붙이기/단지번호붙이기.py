@@ -1,50 +1,48 @@
+from collections import deque 
 import sys
-from collections import deque
 
 input = sys.stdin.readline
-n = int(input())
-graph=[list(map(int,input().rstrip())) for _ in range(n)]
 
-dx = [-1,1,0,0]
-dy = [0,0,-1,1]
-
-
-cnt = 0
-data = []
+dx = [-1, 1, 0 ,0]
+dy = [0, 0, -1, 1]
 
 def bfs(x,y):
-  global max_value
-  max_value = 0
-  queue = deque()
+  cnt = 1
+  queue = deque() 
   queue.append((x,y))
+  visited[x][y] = True
 
-  while queue:
-    x,y=queue.popleft()
+  while(queue):
+    x, y = queue.popleft() 
+    
     for i in range(4):
       nx = x + dx[i]
       ny = y + dy[i]
-      if nx<0 or nx>=n or ny<0 or ny>=n:
-        continue
-      if graph[nx][ny]==1:
-        graph[nx][ny] = graph[x][y] +1
-        max_value += 1
-        queue.append((nx,ny))
-  if max_value == 0:
-    return 1
-  return max_value
+      if(0<=nx<n and 0<=ny<n):
+        if(visited[nx][ny] == False and data[nx][ny] == 1):
+          visited[nx][ny] = True
+          queue.append((nx,ny))
+          cnt += 1
+
+  return cnt
+
+n = int(input())
+data = []
+visited = [[False]*(n + 1) for _ in range(n + 1)]
+result = []
+
+for _ in range(n):
+  data.append(list(map(int, input().strip())))
 
 for i in range(n):
   for j in range(n):
-    if graph[i][j] == 1:
-      m = bfs(i,j)
-      data.append(m)
-      cnt += 1
-data.sort()
-print(cnt)
-for d in data:
-  print(d)
+    if visited[i][j] == False and data[i][j] == 1:
+      result.append(bfs(i,j))
 
+result.sort()
+length = len(result)
 
-  
+print(length)
 
-
+for i in range(length):
+  print(result[i])
