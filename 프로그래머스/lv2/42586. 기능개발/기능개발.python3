@@ -1,0 +1,33 @@
+from collections import deque
+
+def task_distribute(progresses, task_index):
+    n = 1
+    queue = deque()
+    queue.append(task_index)
+    
+    while(queue):
+        task = queue.popleft()
+
+        if(task + 1 < len(progresses)):
+            
+            if(progresses[task + 1] >= 100):
+                queue.append(task + 1)
+                n += 1
+            
+    return n
+    
+def solution(progresses, speeds):
+    answer = []
+    index = 0
+    while(index < len(progresses)):
+        
+        for i in range(len(progresses)):
+            progresses[i] += speeds[i]
+            
+        if(progresses[index] >= 100):
+            result = task_distribute(progresses, index)
+            answer.append(result)
+            index += result
+            
+    
+    return answer
