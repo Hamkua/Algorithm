@@ -1,37 +1,40 @@
 import sys
 import heapq
 
-input = sys.stdin.readline
 INF = sys.maxsize
-V, E = map(int, input().split())
+input = sys.stdin.readline
 
-K = int(input())
 
-dp = [INF]*(V+1)
 heap = []
-graph = [[] for _ in range(V + 1)]
+v, e = map(int, input().strip().split())
 
-def Dijkstra(start):
-    dp[start] = 0
-    heapq.heappush(heap,(0, start))
+result = [INF] * (v + 1)
 
-    while heap:
-        wei, now = heapq.heappop(heap)
-        if dp[now] < wei:
-            continue
+data = [[] for _ in range(v + 1)]
 
-        for w, next_node in graph[now]:
-            next_wei = w + wei
-            if next_wei < dp[next_node]:
-                dp[next_node] = next_wei
-                heapq.heappush(heap,(next_wei,next_node))
+start = int(input())
 
+for _ in range(e):
+  f,t,w = map(int, input().strip().split())
+  data[f].append((w, t))
 
-for _ in range(E):
-    u, v, w = map(int, input().split())
-    graph[u].append((w, v))
+heapq.heappush(heap, (0, start))
+result[start] = 0
 
+while(heap):
+  weight, current_node = heapq.heappop(heap)
 
-Dijkstra(K)
-for i in range(1,V+1):
-    print("INF" if dp[i] == INF else dp[i])
+  if(result[current_node] < weight):
+    continue
+  else:
+    for wei, node in data[current_node]:
+      next_weight = wei + weight
+      if(result[node] > next_weight):
+        result[node] = next_weight
+        heapq.heappush(heap, (next_weight, node))
+     
+for i in range(1, v+1):
+  if(result[i] == INF):
+    print("INF")
+  else:
+    print(result[i])
