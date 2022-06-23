@@ -1,64 +1,66 @@
-from collections import deque 
-import sys 
-input = sys.stdin.readline 
+from collections import deque
+import sys
+
+input = sys.stdin.readline
 
 dx = [-1,1,0,0]
 dy = [0,0,-1,1]
 
-def bfs(x,y):
-  
-  queue = deque()
-  queue.append((x,y))
-  visited[x][y] = 0
-  a = 10000
+queue = deque()
 
-  while queue:
-    x,y = queue.popleft() 
-    
+def check(i, j):
+  queue.append((i, j))
+  visited[i][j] = 0
+
+  while(queue):
+    x, y = queue.popleft()
     for i in range(4):
       nx = x + dx[i]
       ny = y + dy[i]
 
-      if 0<=nx<n and 0<=ny<n:
-        if data[nx][ny] == 1 and visited[nx][ny] == -1 and visited[x][y] > 0:
-          a = min(a,visited[x][y])
+      if(0<=nx<n and 0<=ny<n):
+        if(visited[nx][ny] == -1 and data[nx][ny] == 1):
+          visited[nx][ny] = 0
+          queue.append((nx, ny))
 
-        if data[nx][ny] == 0 and visited[nx][ny] == -1:
+  # for i in range(n):
+  #   print(visited[i])
+  
+def bfs(i, j):
+  tmp = sys.maxsize
+  queue.append((i, j))
+
+  while(queue):
+    x, y = queue.popleft()
+    for i in range(4):
+      nx = x + dx[i]
+      ny = y + dy[i]
+
+      if(0<=nx<n and 0<=ny<n):
+        if(data[nx][ny] == 0 and visited[nx][ny] == -1):
+          queue.append((nx,ny))
           visited[nx][ny] = visited[x][y] + 1
-          queue.append((nx,ny))
 
-  if a!=10000:
-    return a
+        if(data[nx][ny] == 1 and visited[nx][ny] == -1):
+          tmp = min(tmp, visited[x][y])
 
-def check(i,j):
-  queue = deque()
-  queue.append((i,j))
+  return tmp
   
-  while queue:
-    x,y = queue.popleft() 
-    
-    for i in range(4):
-      nx = x + dx[i]
-      ny = y + dy[i]
-      if 0<=nx<n and 0<=ny<n:
-        if data[nx][ny] == 1 and visited[nx][ny] == -1:
-          visited[nx][ny] = -2
-          queue.append((nx,ny))
-
 n = int(input())
 data = []
-for _ in range(n):
-  data.append(list(map(int,input().split())))
 
-min_l = 10000
+result = sys.maxsize
+
+for _ in range(n):
+  data.append(list(map(int, input().strip().split())))
 
 for i in range(n):
   for j in range(n):
-    visited = [[-1]*n for _ in range(n)]
-    if data[i][j] == 1:
-      check(i,j)
-      l = bfs(i,j)
-      if l != None:
-        min_l = min(l,min_l)
+    visited = [[-1] * (n + 1) for _ in range(n + 1)]
+    if(data[i][j] == 1 and visited[i][j] == -1):
+      check(i, j)
+      if(visited[i][j] == 0):
+        tmp = bfs(i,j)
+        result = min(result, tmp)
 
-print(min_l)
+print(result)
