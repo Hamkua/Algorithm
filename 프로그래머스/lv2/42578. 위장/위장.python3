@@ -1,0 +1,23 @@
+from itertools import product
+
+def solution(clothes):
+    answer = 1
+    dic = {}
+
+    for value,key in clothes:
+        if key not in dic:
+            dic[key] = [value]
+        else:
+            dic[key].append(value)
+
+
+    key_set = dic.keys()
+    for key in key_set:
+        answer *= (len(dic[key]) + 1)
+
+
+
+    answer -= 1
+
+
+    return answer
