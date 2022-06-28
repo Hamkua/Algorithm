@@ -5,40 +5,41 @@ input = sys.stdin.readline
 INF = sys.maxsize
 heap = []
 
-def dijkstra(start, end):
-  heapq.heappush(heap, (0, start))
-  result[start] = 0
-  while(heap):
-    cost, destination = heapq.heappop(heap)
-
-    if(result[destination] < cost):
-      continue 
-    else: 
-      for next_cost, next_destination in data[destination]:
-        new_cost = cost + next_cost
-        if result[next_destination] > new_cost:
-          result[next_destination] = new_cost
-          heapq.heappush(heap, (new_cost, next_destination))
-          path[next_destination] = []
-          for p in path[destination]:
-            path[next_destination].append(p)
-          path[next_destination].append(next_destination)
-      
 n = int(input())
 m = int(input())
 
-
-data = [[] for _ in range(n + 1)]
-path = [[] for _ in range(n + 1)]
 result = [INF] * (n + 1)
+route = [[] for _ in range(n + 1)]
+data = [[] for _ in range(n + 1)]
 
 for _ in range(m):
-  f, t, cost = map(int, input().strip().split())
-  data[f].append((cost, t))
+  from_node, to_node, edge = map(int, input().strip().split())
+  data[from_node].append((edge, to_node))
+
 
 start, end = map(int, input().strip().split())
-path[start].append(start)
-dijkstra(start, end)
+
+heapq.heappush(heap, (0, start))
+result[start] = 0
+route[start].append(start)
+
+while(heap):
+  weight, destination = heapq.heappop(heap)
+
+  if(result[destination] < weight):
+    continue
+  else:
+    for next_weight, next_destination in data[destination]:
+      total_weight = weight + next_weight
+      if(result[next_destination] > total_weight):
+        result[next_destination] = total_weight
+        heapq.heappush(heap, (total_weight, next_destination))
+        route[next_destination] = []
+        for r in route[destination]:
+          route[next_destination].append(r)
+  
+        route[next_destination].append(next_destination)
+
 print(result[end])
-print(len(path[end]))
-print(" ".join(map(str, path[end])))
+print(len(route[end]))
+print(" ".join(map(str, route[end])))
