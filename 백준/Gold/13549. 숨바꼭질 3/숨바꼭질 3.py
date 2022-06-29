@@ -1,36 +1,33 @@
-from collections import deque
 import sys
+from collections import deque
 
 input = sys.stdin.readline
+max_size = 100001
 
-n,k = map(int, input().split())
-max_num = 100001
-visited = [False]*max_num
-cnt = 0
+visited = [False]*max_size
+n, m = map(int, input().strip().split())
+
 queue = deque()
+visited[n] = True
+queue.append((n, 0))
 
-queue.append((n,cnt))
-while queue:
-  curr_num, count = queue.popleft()
-
-  if curr_num == k:
-    print(count)
+while(queue):
+  current, time = queue.popleft()
+  if(current == m):
+    print(time)
     break
+    
+  if(0<= current * 2 < max_size):
+    if(visited[current * 2] == False):
+      visited[current * 2] = True
+      queue.appendleft((current * 2, time))
 
-  temp = curr_num*2
-  if 0<=temp<max_num:
-    if visited[temp]==False:
-      visited[temp] = True
-      queue.appendleft((temp, count))
+  if(0<=current + 1 < max_size):
+    if(visited[current + 1] == False):
+      visited[current + 1] = True
+      queue.append((current + 1, time + 1))
 
-  temp = curr_num+1
-  if 0<=temp<max_num:
-    if visited[temp]==False:
-      visited[temp] = True
-      queue.append((temp, count + 1))
-
-  temp = curr_num-1
-  if 0<=temp<max_num:
-    if visited[temp]==False:
-      visited[temp] = True
-      queue.append((temp, count + 1))
+  if(0<= current - 1 < max_size):
+    if(visited[current - 1] == False):
+      visited[current - 1] = True
+      queue.append((current - 1, time + 1))
