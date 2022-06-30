@@ -1,10 +1,7 @@
-package baekjoon;
-
 import java.util.*;
 
 public class Main {
 
-    static int[] data = new int[100001];
     static boolean[] visited = new boolean[100001];
     static Deque<Node> queue = new LinkedList<>();
 
@@ -68,13 +65,3 @@ public class Main {
         }
     }
 }
-
-
-
-//    public static void main(String[] args) throws IOException {
-//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//
-//
-//
-//        br.close();
-//    }
