@@ -1,73 +1,71 @@
-import sys
-from collections import deque 
+from collections import deque
 from itertools import combinations
+import sys
+
 input = sys.stdin.readline
 
 dx = [-1,1,0,0]
 dy = [0,0,-1,1]
-
-def is_continue(visited):
+def check():
+  max_value = 0
   for i in range(n):
     for j in range(n):
-      if visited[i][j] == -1:
-        return False
-  return True
-
-def bfs(arr):
-  queue = deque()
-  visited = [[-1]*n for _ in range(n)]
-  for x,y in arr:
-    visited[x][y] = 0
-    queue.append((x,y))
-
-  for i in range(n):
-    for j in range(n):
-      if data[i][j] == 1:
-        visited[i][j] = -3
-
-  result = 0
-  while queue:
-    x,y = queue.popleft()
+      if(data[i][j] != 1 and visited[i][j] == -1):
+        return -1
+      else:
+        if data[i][j] != 2 and visited[i][j] > max_value:
+          max_value = visited[i][j]
+        
+  return max_value
+  
+def bfs():
+  while(queue):
+    x, y = queue.popleft()
     for i in range(4):
       nx = x + dx[i]
       ny = y + dy[i]
 
-      if 0<=nx<n and 0<=ny<n:
-        if data[nx][ny] == 2 and visited[nx][ny] == -1:
-          visited[nx][ny] = visited[x][y]+1
-          queue.append((nx,ny))
-          
-        if data[nx][ny] == 0 and visited[nx][ny] == -1:
-          visited[nx][ny] = visited[x][y] + 1
-          queue.append((nx,ny))
-          result = max(result,visited[nx][ny])
+      if(0<=nx<n and 0<=ny<n):
+        if(visited[nx][ny] == -1):
+          if(data[nx][ny] == 0):
+            visited[nx][ny] = visited[x][y] + 1
+            queue.append((nx,ny))
+          elif(data[nx][ny] == 2):
+            visited[nx][ny] = visited[x][y] + 1
+            queue.append((nx,ny))
 
-  is_con = is_continue(visited)
-  if(is_con == False):
-    return -1
-  return result
+  max_value = check()
+  if(max_value != -1):
+    result.append(max_value)
 
-n,m = map(int,input().split())
+
+  
+  
+n, m = map(int, input().strip().split())
 data = []
 com = []
-answer = []
-for _ in range(n):
-  data.append(list(map(int,input().split())))
-
+result = []
 for i in range(n):
-  for j in range(n):
-    if data[i][j] == 2:
-      com.append((i,j))
+  row = list(map(int, input().strip().split()))
 
-com = list(combinations(com,m))
+  data.append(row)
+  for j in range(len(row)):
+    if(data[i][j] == 2):
+      com.append((i, j))
 
-for c in com:
-  r = bfs(c)
-  if r == -1:
-    continue
-  answer.append(r)
+com = combinations(com, m)
+queue = deque()
 
-if len(answer) == 0:
+for viruses in com:
+  visited = [[-1] * n for _ in range(n)]
+
+  for x, y in viruses:
+    visited[x][y] = 0
+    queue.append((x, y))
+
+  bfs()
+
+if(len(result) == 0):
   print(-1)
 else:
-  print(min(answer))
+  print(min(result))
