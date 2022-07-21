@@ -1,27 +1,27 @@
 import sys
-input = sys.stdin.readline
 
-n,m = map(int,input().split())
-data =[]
+input = sys.stdin.readline
+n, m = map(int, input().strip().split())
+a = []
+for _ in range(n):
+  a.append(int(input()))
+
+a.sort()
 left = 0
 right = 1
 
-for _ in range(n):
-  data.append(int(input()))
-data.sort()
+result = sys.maxsize
 
-min_value = 2 * 1e9
-
-while left<n and right<n:
-  result = data[right] - data[left]
-  if result == m:
-    min_value = m 
-    break
-  elif result < m:
-    right += 1
-  else:
-    if result <= min_value:
-      min_value = result
+while(left < n and right < n):
+  diff = a[right] - a[left]
+  if(diff == m):
+    result = m
+    break 
+  elif(diff > m):
+    result = min(result, diff)
     left += 1
+  else:
+    
+    right += 1
 
-print(min_value)
+print(result)
