@@ -1,32 +1,35 @@
-from collections import deque
+import sys
+sys.setrecursionlimit(10 ** 5)
+input = sys.stdin.readline
 
-n=int(input())
-tree={i:[] for i in range(n+1)}
-for i in range(n-1):
-  a,b,weight=map(int, input().split())
-  tree[a].append((b,weight))
-  tree[b].append((a,weight))
+def dfs(start, result):
 
-def bfs(s):
-  queue=deque()
-  queue.append((s,0))
-  visited=[0]*n
-  visited[s-1]=1
+  for child, edge in data[start]:
+    if result[child] == -1:
+      result[child] = result[start] + edge
+      dfs(child, result)
+    
 
-  result=[0,0]
-  while queue:
-    now,cnt=queue.popleft()
-    for i in tree[now]:
-      next_number,value=i[0],i[1]
-      if visited[next_number-1]==0:
-        visited[next_number-1]=1
-        queue.append((next_number,cnt+value))
-        if result[1]<cnt+value:
-          result[0]=next_number
-          result[1]=cnt+value
+n = int(input())
+data = [[] for _ in range(n + 1)]
 
-  return result
+for _ in range(n - 1):
+  parent, child, edge = map(int, input().strip().split())
+  data[parent].append((child, edge))
+  data[child].append((parent, edge))
 
-a=bfs(1)
-b=bfs(a[0])
-print(b[1])
+
+result = [-1] * (n + 1)
+result[1] = 0
+
+dfs(1, result)
+
+start = result.index(max(result))
+
+result = [-1] * (n + 1)
+result[start] = 0
+
+dfs(start, result)
+
+result.sort()
+print(result.pop())
