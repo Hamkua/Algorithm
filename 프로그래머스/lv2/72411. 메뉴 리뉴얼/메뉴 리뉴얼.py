@@ -1,34 +1,31 @@
-from itertools import combinations
 from collections import Counter
+from itertools import combinations
 
 def solution(orders, course):
     answer = []
 
-    tmp = list()
-    
-    for num in course:
+    for n in course:
         tmp = []
         for order in orders:
-            # if num > len(order):
-            #   continue
-              
-            combination = combinations(order, num)
-          
-            for c in combination:
-                # print(c)
-                c = "".join(sorted(list(c)))
-                tmp.append(c)
-       
-
+            order_list = list(order)
         
-        counter = Counter(tmp).most_common()
+            combination_list = combinations(order_list, n)
+            for combination in combination_list:
+                tmp.append("".join(sorted(combination)))
 
-        if len(counter) == 0:
-          continue
-        max_cnt = counter[0][1]
-        if max_cnt > 1:
-            for value, cnt in counter:
-                if cnt == max_cnt:
-                    answer.append(value)
+
+        counter_list = Counter(tmp).most_common()
+        if len(counter_list) == 0:
+            continue 
+        # print(counter_list)
+        max_cnt = counter_list[0][1]
+        if max_cnt <= 1:
+            continue
+
+        for value, cnt in counter_list:
+            if cnt == max_cnt:
+                answer.append(value)
+            else:
+                break
     
     return sorted(answer)
