@@ -1,30 +1,21 @@
 import sys
 input = sys.stdin.readline
-data = []
-answer = []
 
 n, m = map(int, input().strip().split())
 
-for _ in range(n):
-  data.append(list(map(int, input().strip().split())))
+data =  [list(map(int, input().strip().split())) for _ in range(n)]
+accumulated_data = [[0] * (n + 1) for _ in range(n + 1)]
+result = []
 
-for x in range(n):
-  sum_value = 0
-  for y in range(n):
-    sum_value += data[x][y]
-    data[x][y] =sum_value
-
-for i in range(m):
-  x1, y1, x2, y2 = map(int, input().strip().split())
-
-  value = 0
-  for x in range(x1 - 1, x2):
-    if y1 > 1:
-      value += data[x][y2 -1] - data[x][y1 - 2]
-    else:
-      value += data[x][y2 -1]
+for x in range(1,n+1):
+  for y in range(1,n+1):
+    accumulated_data[x][y] = data[x - 1][y - 1] + accumulated_data[x - 1][y] + accumulated_data[x][y - 1] - accumulated_data[x - 1][y - 1]
   
-  answer.append(value)
-
-for result in answer:
-  print(result)
+for _ in range(m):
+  x1, y1, x2, y2 = map(int, input().strip().split())
+  result.append(accumulated_data[x2][y2] - accumulated_data[x2][y1 - 1] - accumulated_data[x1 - 1][y2] + accumulated_data[x1 - 1][y1 -1])
+  
+  
+#   answer.append(value)
+for answer in result:
+  print(answer)
