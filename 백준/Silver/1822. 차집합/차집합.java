@@ -40,9 +40,8 @@ public class Main {
             }
         }
         System.out.println(C);
-        if(C > 0){
-            System.out.println(sb);
-        }
+        System.out.println(sb);
+        
     }
     static int binarySearch(int[] arr, int L, int R, int X) {
         while (L <= R) {
