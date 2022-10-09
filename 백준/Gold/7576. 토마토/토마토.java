@@ -4,73 +4,66 @@ import java.util.*;
 public class Main {
 
     static StringTokenizer st;
-
-    static int n, m, x, y, nx, ny;
+    static int n, m, tmp, nx, ny, result;
     static int[][] data;
-    static int[] dx = {-2, -2, -1, -1, 1, 1, 2, 2};
-    static int[] dy = {-1, 1, -2, 2, -2, 2, -1, 1};
+    static int[] dx = {-1, 1, 0, 0};
+    static int[] dy = {0, 0, -1, 1};
+
+    static Queue<Point> queue = new LinkedList<>();
 
     public static void main(String[] args) throws IOException{
 
-        StringBuilder sb = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(st.nextToken());
 
-        data = new int[n + 1][n + 1];
-        for(int i = 0; i < n + 1; i++) {
-            Arrays.fill(data[i], -1);
+        data = new int[n][m];
+        for(int i = 0; i<n; i++){
+            st = new StringTokenizer(br.readLine());
+            for(int j = 0; j<m; j++){
+                tmp = Integer.parseInt(st.nextToken());
+                data[i][j] = tmp;
+                if(tmp == 1){
+                    queue.add(new Point(i, j));
+                }
+            }
         }
-
-        st = new StringTokenizer(br.readLine());
-        x = Integer.parseInt(st.nextToken());
-        y = Integer.parseInt(st.nextToken());
-
-        data[x][y] = 0;
-
 
         bfs();
 
-        for(int i = 0; i < m; i++){
-            st = new StringTokenizer(br.readLine());
-
-            sb.append(data[Integer.parseInt(st.nextToken())][Integer.parseInt(st.nextToken())]).append(" ");
-
+        result = 1;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(data[i][j] == 0){
+                    result = 0;
+                    break;
+                }
+                result = Math.max(result, data[i][j]);
+            }
+            if(result == 0){
+                break;
+            }
         }
 
-        System.out.println(sb);
-
-
+        System.out.println(result - 1);
     }
 
-
     public static void bfs(){
-        Queue<Point> queue = new LinkedList<>();
-        queue.add(new Point(x, y));
-
-
         while(!queue.isEmpty()){
-
             Point point = queue.poll();
             int x = point.x;
             int y = point.y;
-
-
-            for(int i = 0; i<8; i++) {
+            for(int i = 0; i < 4; i++){
                 nx = x + dx[i];
                 ny = y + dy[i];
 
-
-                if (0 < nx && nx <= n && 0 < ny && ny <= n) {
-
-                    if (data[nx][ny] == -1) {
-
+                if(0 <= nx && nx < n && 0 <= ny && ny < m){
+                    if(data[nx][ny] == 0){
                         data[nx][ny] = data[x][y] + 1;
                         queue.add(new Point(nx, ny));
                     }
-
-
                 }
             }
         }
