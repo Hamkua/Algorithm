@@ -33,5 +33,6 @@ while(x > 0 and y > 0):
     y -= 1
   else:
     x -= 1 
+    y -= 1
     cnt += 1
 print(cnt)
