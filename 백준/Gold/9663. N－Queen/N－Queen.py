@@ -6,10 +6,18 @@ data = [0] * n
 
 result = 0
 
-def check(x):
+#def check(x):
+#  for qx in range(x):
+#    qy = data[qx]
+#    if qx == x or qy == data[x] or abs(x - qx) == abs(data[x] - qy):
+#      return False
+
+#  return True 
+
+def check(x, y):
   for qx in range(x):
     qy = data[qx]
-    if qx == x or qy == data[x] or abs(x - qx) == abs(data[x] - qy):
+    if qx == x or qy == y or abs(x - qx) == abs(y - qy):
       return False
 
   return True 
@@ -27,8 +35,15 @@ def backtracking(idx):
     
   else:
     for i in range(n):
+      isContinue = True
       data[idx] = i
-      if check(idx):
+      for qx in range(idx):
+        qy = data[qx]
+        if qx == idx or qy == data[idx] or abs(idx - qx) == abs(data[idx]- qy):
+            isContinue = False
+            break
+        
+      if isContinue:
         backtracking(idx + 1)
           
 backtracking(0)
