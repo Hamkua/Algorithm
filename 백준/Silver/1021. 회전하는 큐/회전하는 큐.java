@@ -1,52 +1,55 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.StringTokenizer;
 
 public class Main {
-    static LinkedList<Integer> queue = new LinkedList<>();
-    static int count = 0;
+    static LinkedList<Integer> CircularQueue = new LinkedList<>();
+
 
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] strings = br.readLine().split(" ");
-        int n = Integer.parseInt(strings[0]);
-        int m = Integer.parseInt(strings[1]);
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        String[] strings2 = br.readLine().split(" ");
-        int[] dataArr = new int[m];
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
 
-        for(int i = 0; i<dataArr.length; i++){
-            dataArr[i] = Integer.parseInt(strings2[i]);
+        for(int i = 1; i <= n; i++){
+            CircularQueue.add(i);
         }
 
-        for(int i =1; i<n+1; i++){
-            queue.add(i);
+        int result = 0;
+
+        st = new StringTokenizer(br.readLine());
+        for(int i = 0; i < m; i++){
+            int data = Integer.parseInt(st.nextToken());
+            int targetIndex = CircularQueue.indexOf(data);
+
+             int left = targetIndex;
+             int right = CircularQueue.size() - targetIndex;
+
+             if(left < right){
+                 while(CircularQueue.getFirst() != data){
+                     result += 1;
+                     Integer first = CircularQueue.pollFirst();
+                     CircularQueue.add(first);
+                 }
+
+                 CircularQueue.pollFirst();
+
+             }else{
+                 while(CircularQueue.getFirst() != data){
+                     result += 1;
+                     Integer last = CircularQueue.pollLast();
+                     CircularQueue.add(0, last);
+                 }
+
+                 CircularQueue.pollFirst();
+             }
         }
 
-        for(int data : dataArr){
-            while(true){
-                int peek = queue.peek();
-                if(peek == data){
-                    queue.poll();
-                    break;
-                }
+        System.out.println(result);
 
-                if(queue.size() - queue.indexOf(data) > queue.indexOf(data)){
-                    int q = queue.poll();
-                    queue.add(q);
-                    count++;
-
-                }else{
-                    int q = queue.pollLast();
-                    queue.addFirst(q);
-                    count++;
-
-                }
-            }
-        }
-        System.out.println(count);
-        br.close();
     }
 }
